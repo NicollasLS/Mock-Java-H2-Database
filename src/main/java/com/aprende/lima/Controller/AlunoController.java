@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/alunos")
+@RequestMapping("/alunos")
 public class AlunoController {
 
     private final AlunoService service;
@@ -19,25 +19,35 @@ public class AlunoController {
     }
 
     @GetMapping
-    public List<Aluno> buscarAlunos(){
+    public List<Aluno> buscarAlunos() {
         return service.listaDeAluno();
     }
 
-@PostMapping
-    public Aluno criar (@RequestBody Aluno novoAluno){
-        return service.criarAluno (novoAluno);
+    @PostMapping
+    public Aluno criar(@RequestBody Aluno novoAluno) {
+        return service.criarAluno(novoAluno);
     }
+
     @DeleteMapping("/{id}")
-    public void excluirAluno (@PathVariable Long id){
+    public void excluirAluno(@PathVariable Long id) {
         service.deletarAluno(id);
     }
 
 
-@GetMapping("/{id}")
-    public Aluno buscarAlunoPorId (@PathVariable long id){
+    @GetMapping("/{id}")
+    public Aluno buscarAlunoPorId(@PathVariable long id) {
         return service.buscarAlunoId(id);
-}
-@PutMapping("/{id}")
-    public Aluno atualizarAluno (PathVariable Long id,@RequestBody)
+    }
+
+    @PutMapping("/{id}")
+    public Aluno atualizaAluno(@PathVariable Long id, @RequestBody Aluno alteraAluno) {
+        Aluno atualizado = service.buscarAlunoId(id);
+        if (atualizado == null) return null;
+
+    atualizado.setNome(alteraAluno.getNome());
+    atualizado.setEmail(alteraAluno.getEmail());
+    atualizado.setTelefone(alteraAluno.getTelefone());
+    return service.criarAluno(atualizado);
+    }
 }
 
